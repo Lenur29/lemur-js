@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { FirebaseModule } from '@/modules/firebase/firebase.module.js';
 import { IdModule } from '@/modules/id/id.module.js';
 import { User } from '@/modules/users/user.entity.js';
 
@@ -18,7 +17,6 @@ import { sendersAsProviders } from './types/registry.js';
       User,
     ]),
     IdModule,
-    FirebaseModule,
   ],
   providers: [
     {

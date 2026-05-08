@@ -36,7 +36,6 @@ import { SessionsModule } from './modules/auth/sessions/sessions.module.js';
 import { HooksModule } from './modules/hooks/hooks.module.js';
 import { RolesModule } from './modules/roles/roles.module.js';
 import { UserRolesModule } from './modules/user-roles/user-roles.module.js';
-import { FirebaseModule } from './modules/firebase/firebase.module.js';
 import { NotificationsModule } from './modules/notifications/notifications.module.js';
 import { S3MultipartModule } from './modules/s3-multipart/s3-multipart.module.js';
 
@@ -124,7 +123,6 @@ const httpImports: ModuleMetadata['imports'] = [
   BinaryFilesModule,
   RolesModule,
   UserRolesModule,
-  FirebaseModule,
   NotificationsModule,
   S3MultipartModule,
 ];
