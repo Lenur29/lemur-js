@@ -7,6 +7,7 @@
     "dev:api": "pnpm --filter @lm/api dev",
     "dev:app": "pnpm --filter @lm/app dev",
     "dev:cli": "pnpm --filter @lm/cli dev",
+    "cli": "pnpm --filter @lm/cli cli",
     "start:api": "pnpm --filter @lm/api start",
     "build": "pnpm --filter './apps/*' build",
     "build:api": "turbo run build --filter=@lm/api",

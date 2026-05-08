@@ -67,10 +67,20 @@ cp apps/api/.env.example.yml apps/api/.env.yml
 
 ## 5. Сидинг базы
 
-Один раз (или при `--clean`) создаём `superadmin@lemur.test`:
+Скопируйте конфиг CLI (читается из cwd пакета — то есть `apps/cli/`):
 
 ```bash
-pnpm --filter @lm/cli dev db seed --env local --clean
+cp apps/cli/cli.config.example.yml apps/cli/cli.config.yml
+```
+
+Если используете Conductor — выставьте в `apps/cli/cli.config.yml` `port` на
+порт Postgres из «Workspace setup».
+
+Создаём `superadmin@lemur.test` (по умолчанию выполняется TRUNCATE; чтобы оставить
+данные — добавьте `--no-clean`):
+
+```bash
+pnpm cli db seed --env local
 ```
 
 > Пароль выводится в терминал в конце команды.

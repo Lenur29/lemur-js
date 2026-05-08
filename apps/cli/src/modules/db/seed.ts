@@ -16,7 +16,7 @@ interface SeedOptions extends CommandArgsWithEnv {
 
 export const seedCmd = createCommandWithEnv('seed')
   .description('Seed database with initial data')
-  .option('--clean', 'Clean database before seeding', false)
+  .option('--no-clean', 'Skip cleaning database before seeding')
   .action(async (options: SeedOptions) => {
     const logger = useLogger({ name: 'db:seed' });
 
