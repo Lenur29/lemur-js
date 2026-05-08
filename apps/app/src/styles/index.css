@@ -14,11 +14,15 @@
   --color-accent: oklch(55% 0.2 265);
   --color-accent-hover: oklch(50% 0.2 265);
   --color-accent-bg: oklch(96% 0.03 265);
+  --color-accent-strong: oklch(40% 0.18 265);
 
   /* — Used for self-rating buttons — */
   --color-success: oklch(65% 0.15 145);
   --color-warning: oklch(75% 0.15 75);
   --color-danger: oklch(60% 0.2 25);
+  --color-success-bg: oklch(96% 0.03 145);
+  --color-warning-bg: oklch(96% 0.04 75);
+  --color-danger-bg: oklch(96% 0.03 25);
 
   /* — Fonts — */
   --font-sans: "Geist Variable", system-ui, -apple-system, sans-serif;
