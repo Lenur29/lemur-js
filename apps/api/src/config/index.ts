@@ -20,6 +20,4 @@ export { FrontendConfig } from './frontend.config.js';
 export { MailerConfig } from './mailer.config.js';
 export { MailpitConfig } from './mailpit.config.js';
 export { SessionsConfig } from './sessions.config.js';
-export { GcpConfig } from './gcp.config.js';
 export { S3Config } from './s3.config.js';
-export { OpenAIConfig } from './openai.config.js';
