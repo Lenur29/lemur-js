@@ -11,7 +11,7 @@ Mandatory next step after writing or modifying a Playwright spec in the `@ugi/e2
 
 - E2E root: `e2e/` (workspace package `@ugi/e2e`)
 - Spec paths are **relative to `e2e/`** — e.g. `tests/smoke/login.spec.ts:42`
-- Frontend apps: `@ugi/admin` (admin panel) and `@ugi/webapp` (Telegram Web App). Both are Vue 3 + Vite.
+- Frontend apps: `@ugi/admin` (admin panel) and `@ugi/webapp` (Telegram Web App). Both are React 19 + Vite.
 - API (`@ugi/api`) runs as a **build + start** pair — `pnpm build:api` produces `apps/api/dist/`, `pnpm start:api` runs it (`APP_ENV=local node apps/api/dist/main.js`). There is **no `--watch`** in this skill — every API source change is `KillShell` → rebuild → relaunch.
 - Frontends are served as static builds by **a single** `pnpm preview:frontend` process (one Turbo run that serves both `apps/admin/dist/` and `apps/webapp/dist/`). `vite preview` re-serves whatever sits in `dist/` on the next request — **rebuilding either app does NOT require restarting the preview process**.
 - All e2e runs use **preview mode only**. `PW_PREVIEW=1` in [e2e/playwright.config.ts:3](e2e/playwright.config.ts#L3) extends per-test timeout to 120s and adds 700ms `slowMo` — pass it on every command. There is no dev-mode path in this skill.
@@ -219,8 +219,8 @@ If `failure.md` doesn't yield a category in one pass: re-read the spec source an
 
 **REQUIRED: every locator in the codebase targets `data-testid`.** When you fix a stale or missing locator, you MUST use `data-testid` — never `[role=…]`, `input[name=…]`, `button[type=…]`, `getByRole(…)`, `getByText(…)`, CSS class, or tag selectors. If the failing element doesn't have a testid yet:
 
-1. Open the Vue source for the component the test targets (usually `apps/admin/src/...`).
-2. Add `data-testid="<feature>-<element>"` to the relevant element. For Nuxt UI composites that don't forward the attr (e.g. inner inputs of `UAuthForm`), refactor the form to use individual `UFormField` + `UInput` so each input gets its own testid; for `USlideover`, put the testid on a child of `<template #body>`.
+1. Open the React source for the component the test targets (usually `apps/admin/src/...`).
+2. Add `data-testid="<feature>-<element>"` to the relevant element. For composite components that don't forward the attribute, wrap a child element (or refactor the composite) so each interactive control gets its own testid.
 3. Update the page object to `page.getByTestId('<feature>-<element>')`.
 4. Rebuild the affected app (`pnpm build:admin` / `pnpm build:webapp`) before re-running — `vite preview` will serve the refreshed `dist/` on the next request, no restart needed.
 
@@ -228,7 +228,7 @@ If `failure.md` doesn't yield a category in one pass: re-read the spec source an
 // ❌ Forbidden — even if the element has a stable role/name today
 this.errorAlert = this.pageContainer.locator('[role="alert"]');
 
-// ✅ Add testid in the .vue component, then:
+// ✅ Add testid in the .tsx component, then:
 this.errorAlert = this.pageContainer.getByTestId('login-error');
 ```
 
@@ -340,7 +340,7 @@ Side issues observed (omit entirely if empty):
 - <one bullet per concrete, reproducible issue with a file path>
 ```
 
-**Auto-include rule**: after each Phase 2 run, grep `test.log` for `Cleanup:.*failed|teardown.*error|console\.warn.*Cleanup` and surface as side-issue bullets. Bar is "concrete, reproducible, with file path". No filler like "Vue devtools not detected" — omit the section if empty.
+**Auto-include rule**: after each Phase 2 run, grep `test.log` for `Cleanup:.*failed|teardown.*error|console\.warn.*Cleanup` and surface as side-issue bullets. Bar is "concrete, reproducible, with file path". No filler like "React DevTools not detected" — omit the section if empty.
 
 For any failure, inline the relevant log excerpts so the user can resume.
 
@@ -360,7 +360,7 @@ For any failure, inline the relevant log excerpts so the user can resume.
 - ❌ Iterate with a repeated diff hash (spinning)
 - ❌ Iterate after disagreement of categories in iterations 1 & 2 (guessing)
 - ❌ Guess at locators before reading `failure.md`
-- ❌ "Fix" a `locator_stale` / `locator_missing` failure with anything other than `data-testid` — no `[role=…]`, `input[name=…]`, `getByRole`, `getByText`, CSS class, or tag selectors. Add the testid to the Vue source, rebuild the affected app (`pnpm build:admin` / `pnpm build:webapp`), and retarget via `getByTestId(...)`.
+- ❌ "Fix" a `locator_stale` / `locator_missing` failure with anything other than `data-testid` — no `[role=…]`, `input[name=…]`, `getByRole`, `getByText`, CSS class, or tag selectors. Add the testid to the React source, rebuild the affected app (`pnpm build:admin` / `pnpm build:webapp`), and retarget via `getByTestId(...)`.
 - ❌ Apply a fix before scanning the `## Unified timeline` for `❌ NETWORK 4xx/5xx` or `❌ CONSOLE` entries preceding the failure
 - ❌ Skip Phase 3 stability re-run on passing tests
 - ❌ Parse `trace.zip` — preserved for human follow-up via `npx playwright show-trace`

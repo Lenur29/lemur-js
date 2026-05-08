@@ -1,5 +1,5 @@
 //
-// @pkg 📦 DeepVision TSConfig (Vite + Vue)
+// @pkg 📦 DeepVision TSConfig
 // @version 📍 1.0.0
 // @author 🐳 DV Software <code@deepvision.software>
 //
@@ -27,7 +27,6 @@
     "outDir": "dist",
 
     // Set path alias for src directory
-    // see also resolve aliases section in vue.config.js
     "baseUrl": ".",
     "paths": {
       "#/*": ["packages/core/src/*"],

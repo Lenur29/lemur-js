@@ -1,7 +1,7 @@
 /**
  * Page Object Model for the Me (current user) page.
  *
- * Targets only the testids that exist today in MePage.vue:
+ * Targets only the testids that exist today in MePage:
  *   me-page, me-full-name, me-email, me-user-id, me-2fa-status
  */
 

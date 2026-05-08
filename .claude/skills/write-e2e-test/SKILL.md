@@ -16,18 +16,17 @@ description: Creates Playwright E2E tests for the UGI.Cloud monorepo (@ugi/e2e) 
 | E2E root | `e2e/` |
 | Test files | `e2e/tests/{feature}/{feature}-{action}.spec.ts` |
 | Page Objects | `e2e/pages/{feature}.page.ts` |
-| Component helpers | `e2e/components/basic/u-{name}.component.ts` |
 | Path alias | `@/...` → `e2e/*` |
 | Imports | Always use `.js` extension (ESM) |
 | `data-testid` | `{module}-{element}` or `{module}-{element}-{id}` |
 
-Admin app is Vue 3 + Nuxt UI v4 + Vite (dev server with HMR). API is NestJS + Apollo GraphQL. Auth is session-cookie based via the `testLogin` mutation.
+Frontend is React 19 + React Router + Vite (dev server with HMR). API is NestJS + Apollo GraphQL. Auth is session-cookie based via the `testLogin` mutation.
 
 The frontend can run in two interchangeable modes — **dev** (`pnpm dev:admin`, Vite HMR) or **preview** (`pnpm build:admin && pnpm preview:admin`, serves `dist/`). The URL is the same in both; tests don't need to know which is running. When the user wants to exercise tests against the preview build, they run `pnpm --filter @ugi/e2e test:preview` which sets `PW_PREVIEW=1` (extends timeout to 120s, adds slowMo). `test:ui` and `test:headed` drive the normal dev-mode flow.
 
 ## REQUIRED: Locators MUST use `data-testid`
 
-**All element locators in test code MUST target `data-testid`.** No exceptions — not for "temporary" locators, not for Nuxt UI composites that "don't forward testids", not for `role=`, `name=`, `type=submit`, CSS class, tag name, or text content.
+**All element locators in test code MUST target `data-testid`.** No exceptions — not for "temporary" locators, not for composite components that "don't forward testids", not for `role=`, `name=`, `type=submit`, CSS class, tag name, or text content.
 
 - ✅ `page.getByTestId('login-submit')`
 - ✅ `page.locator('[data-testid^="user-row-"]')` — attribute-prefix selector on `data-testid` is fine, it's still a testid
@@ -38,7 +37,7 @@ The frontend can run in two interchangeable modes — **dev** (`pnpm dev:admin`,
 - ❌ `page.locator('.some-class')`
 - ❌ `page.getByText('Save')`
 
-If the component you're targeting doesn't have a testid (commonly Nuxt UI composites like `UAuthForm`, or inner slotted elements of `USlideover`), **add one to the Vue source first**, rebuild if in preview mode, then write the test. See the "Adding testids to the frontend" subsection below. This rule applies to **both new tests and fixes** — when `debug-e2e-test` points at a stale locator, the fix is to add a testid, not to swap one CSS selector for another.
+If the component you're targeting doesn't have a testid, **add one to the React source first**, rebuild if in preview mode, then write the test. See the "Adding testids to the frontend" subsection below. This rule applies to **both new tests and fixes** — when `debug-e2e-test` points at a stale locator, the fix is to add a testid, not to swap one CSS selector for another.
 
 ## Test File Template
 
@@ -263,67 +262,23 @@ export class ExamplePage {
 | Assertion | `Verify {state}` | `Verify item is visible (item_123)` |
 | Negative assertion | `Verify {thing} is NOT {state}` | `Verify item is NOT visible (item_123)` |
 
-## Adding testids to the frontend (Nuxt UI v4)
+## Adding testids to the frontend
 
-The admin uses **Nuxt UI v4 in standalone Vue mode**. Most components forward `data-testid` to the root element (UButton, UCard, UModal, UInput, UFormField, …) — just add the attribute and use `getByTestId`.
+Add `data-testid` directly on the React element you want to target, then locate via `getByTestId`. For composite components that don't forward the attribute to a useful root, wrap in a `<div data-testid="…">` or refactor so each interactive control owns its own testid.
 
-Two cases need extra work:
+If you're tempted to write `input[name="..."]`, `button[type="submit"]`, `[role="alert"]`, or `getByText('…')` — stop and add a testid to the React source first.
 
-1. **`USlideover`** doesn't forward `data-testid` — put it on an inner element inside `<template #body>`.
-2. **Composite components** like `UAuthForm` don't expose per-field testids. **Do not fall back to `input[name="email"]`** — that violates the locator rule. Instead, refactor the form so the test can address each field by testid. Two acceptable patterns:
-   - Replace `UAuthForm` with hand-rolled `UFormField` + `UInput` so each input gets its own `data-testid`.
-   - Wrap the form in a container testid AND add per-field testids via slot overrides / refactor the rendering, so locators read `getByTestId('login-email')`, `getByTestId('login-password')`, `getByTestId('login-submit')`.
+```tsx
+// ✅ Preferred — testid on the rendered element
+<button data-testid="example-submit-button">Save</button>
 
-If you're tempted to write `input[name="..."]`, `button[type="submit"]`, `[role="alert"]`, or `getByText('…')` — stop and add a testid to the Vue source first.
-
-```typescript
-// ✅ Preferred — testid on the Nuxt UI root
-<UButton data-testid="example-submit-button">Save</UButton>
-
-// ✅ USlideover — testid goes inside
-<USlideover>
-  <template #body>
-    <div data-testid="example-slideover">…</div>
-  </template>
-</USlideover>
-
-// ✅ Composite component — refactor / add per-field testids in the .vue source
-<UAlert v-if="apiError" data-testid="login-error" :description="apiError" />
+// ✅ Composite component — add per-field testids in the .tsx source
+{apiError && <Alert data-testid="login-error" message={apiError} />}
 this.errorAlert = page.getByTestId('login-error');
 
-// ❌ Forbidden — even when a Nuxt UI composite makes it inconvenient
+// ❌ Forbidden — even when a composite makes it inconvenient
 this.emailInput = this.pageContainer.locator('input[name="email"]');
 ```
-
-## Component Helpers (Nuxt UI)
-
-Import from `@/components/basic/index.js` ([e2e/components/basic/](e2e/components/basic)):
-
-| Helper | Component | Key methods |
-|--------|-----------|-------------|
-| `USelectHelper` | `USelect` | `selectOption()`, `expectSelected()` |
-| `USelectMenuHelper` | `USelectMenu` | `selectOption()`, `search()` |
-| `UCheckboxHelper` | `UCheckbox` | `check()`, `uncheck()`, `expectChecked()` |
-| `USwitchHelper` | `USwitch` | `enable()`, `disable()`, `expectEnabled()` |
-| `UInputDateHelper` | Date picker | `fillDate('1990-01-15')` |
-| `UInputNumberHelper` | Number input | `fill()`, `increment()`, `decrement()` |
-| `UPhoneInputHelper` | Phone input | `fill()` |
-| `UPaginationHelper` | `UPagination` | `goToPage()`, `next()`, `prev()` |
-| `URadioGroupHelper` | `URadioGroup` | `select()`, `expectSelected()` |
-| `UYesNoHelper` | Yes/No choice | `selectYes()`, `selectNo()` |
-| `UToastHelper` | `UToast` | `expectToast()`, `dismiss()` |
-| `UErrorHelper` | Inline errors | `expectError()` |
-| `URepeatableCollectionHelper` | Dynamic list | `add()`, `remove()`, `fillRow()` |
-
-```typescript
-import { USelectHelper, UCheckboxHelper } from '@/components/basic/index.js';
-
-await USelectHelper.selectOption(page, selectLocator, 'Option text');
-await USelectHelper.expectSelected(selectLocator, 'Option text');
-await UCheckboxHelper.check(page, checkboxLocator);
-```
-
-Before writing yet another helper, browse the existing ones — most Nuxt UI widgets are already covered.
 
 ## Data Generation
 
@@ -476,7 +431,7 @@ pnpm --filter @ugi/e2e test:preview        # PW_PREVIEW=1 --headed (slow-mo 700m
 - [ ] **Authenticated user obtained via `authenticatedPageAs` / `testUser` / `testStudent`** — never via seed-user references in test bodies. See [`e2e/CLAUDE.md`](e2e/CLAUDE.md).
 - [ ] Page Object has `expect*` methods for reusable assertions
 - [ ] Every async page-object method logs via `logger.info(...)`
-- [ ] **Every locator uses `data-testid`** — no `input[name=…]`, `[role=…]`, `getByRole`, `getByText`, CSS class, or tag selectors. If the target lacks a testid, add one to the Vue source first.
+- [ ] **Every locator uses `data-testid`** — no `input[name=…]`, `[role=…]`, `getByRole`, `getByText`, CSS class, or tag selectors. If the target lacks a testid, add one to the React source first.
 - [ ] No `waitForLoadState('networkidle')` — use `waitForResponse` or auto-retry assertions
 - [ ] Unique test data via `fake.uniqueEmail()` / `fake.uniqueId()` (factory-created users already have unique faker emails)
 - [ ] Dynamically created pages (`authenticatedPageAs`, `createAuthenticatedPage`) don't need manual `.close()` — fixture handles teardown
