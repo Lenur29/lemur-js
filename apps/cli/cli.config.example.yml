@@ -1,0 +1,7 @@
+database:
+  local:
+    host: localhost
+    port: 6720
+    user: root
+    pass: root
+    db: app
