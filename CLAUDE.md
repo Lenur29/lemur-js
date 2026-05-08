@@ -74,9 +74,9 @@ pnpm --filter @lm/cli dev db seed --env local --clean   # Seed superadmin
 
 ## React App (`apps/app`)
 
-Vue is gone. The frontend is React 19 + React Router + Tailwind CSS 4.
-Conventions are still being defined; defer to the structure already on
-disk (`src/app`, `src/layouts`, `src/modules`, `src/shared`).
+The frontend is React 19 + React Router + Tailwind CSS 4. Conventions
+are still being defined; defer to the structure already on disk
+(`src/app`, `src/layouts`, `src/modules`, `src/shared`).
 
 ## E2E
 

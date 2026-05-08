@@ -1,7 +1,7 @@
 /**
  * Page Object Model for the Edit Me (current user edit) page at /me/edit.
  *
- * Targets the testids defined in EditMePage.vue and the existing roles widget:
+ * Targets the testids defined in EditMePage and the existing roles widget:
  *   edit-me-page, edit-me-first-name, edit-me-last-name, edit-me-submit,
  *   me-roles-list, me-role-item.
  */

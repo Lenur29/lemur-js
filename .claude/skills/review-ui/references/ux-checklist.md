@@ -71,7 +71,7 @@ Walk this top-to-bottom. Skip a category only if it doesn't apply (e.g. no forms
 - [ ] No images > 500 KB without a Reason
 - [ ] No blocking script / CSS in the critical path
 - [ ] GraphQL: no N+1 sub-queries; no `useQuery` re-fetching on every keystroke (use `useDebounce`)
-- [ ] No console errors / Vue warnings on initial render
+- [ ] No console errors / React warnings on initial render
 
 ## Consistency (across the app)
 

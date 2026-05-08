@@ -145,7 +145,7 @@ Apply the diagnosis order from [debug-e2e-test](../debug-e2e-test/SKILL.md#diagn
 
 Pick exactly one category.
 
-**Locator rule (REQUIRED).** When the category is `locator_stale` or `locator_missing`, the fix MUST use `data-testid` — never `[role=…]`, `input[name=…]`, `button[type=…]`, `getByRole(…)`, `getByText(…)`, CSS class, or tag selectors. If the failing element doesn't have a testid, add one to the Vue source first (in `apps/admin/src/...` or `apps/webapp/src/...`), rebuild if in preview mode, then update the page object to `page.getByTestId('<feature>-<element>')`. Same rule applies inside this skill as in [write-e2e-test](../write-e2e-test/SKILL.md#required-locators-must-use-data-testid).
+**Locator rule (REQUIRED).** When the category is `locator_stale` or `locator_missing`, the fix MUST use `data-testid` — never `[role=…]`, `input[name=…]`, `button[type=…]`, `getByRole(…)`, `getByText(…)`, CSS class, or tag selectors. If the failing element doesn't have a testid, add one to the React source first (in `apps/admin/src/...` or `apps/webapp/src/...`), rebuild if in preview mode, then update the page object to `page.getByTestId('<feature>-<element>')`. Same rule applies inside this skill as in [write-e2e-test](../write-e2e-test/SKILL.md#required-locators-must-use-data-testid).
 
 #### 3.2 — Apply ONE narrow fix
 

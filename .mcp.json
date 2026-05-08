@@ -1,9 +1,5 @@
 {
   "mcpServers": {
-    "nuxt-ui": {
-      "command": "npx",
-      "args": ["@riyenz/nuxt-ui-mcp-server"]
-    },
     "figma-desktop": {
       "type": "http",
       "url": "http://127.0.0.1:3845/mcp"
