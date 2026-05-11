@@ -33,14 +33,14 @@ catalog:
   # ============================================
   # @pcg Internal Packages
   # ============================================
-  "@pcg/text-kit": "1.0.0-alpha.4"
-  "@pcg/auth": "1.0.0-alpha.3"
-  "@pcg/dynamic-components": "1.0.0-alpha.5"
+  "@pcg/text-kit": "1.0.0"
+  "@pcg/auth": "1.0.0"
+  "@pcg/dynamic-components": "1.0.0"
   "@pcg/graphql-kit": "2.0.0"
-  "@pcg/dotenv-yaml": "1.0.0-alpha.2"
-  "@pcg/predicates": "1.0.0-alpha.2"
-  "@pcg/typeorm": "1.0.0-alpha.4"
-  "@pcg/cli-tools": "1.0.0-alpha.3"
+  "@pcg/dotenv-yaml": "1.0.0"
+  "@pcg/predicates": "1.0.0"
+  "@pcg/typeorm": "1.0.0"
+  "@pcg/cli-tools": "1.1.0"
 
   # ============================================
   # Backend Shared
