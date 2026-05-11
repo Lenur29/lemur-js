@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@faker-js/faker": "catalog:",
-    "@pcg/cli-tools": "1.0.0-alpha.4",
+    "@pcg/cli-tools": "catalog:",
     "@pcg/text-kit": "catalog:",
     "bcrypt": "catalog:",
     "commander": "^13.0.0",
