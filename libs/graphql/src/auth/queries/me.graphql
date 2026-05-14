@@ -1,4 +1,3 @@
-
 query Me {
   me {
     id
@@ -6,31 +5,8 @@ query Me {
     firstName
     lastName
     fullName
-    gender
-    sessionHash
-    avatar {
-      ...ImageFields
-    }
-    resolvedPermissions
-    permissions
     is2faEnabled
     isOtpEnabled
-    pushNotificationsEnabled
-    studentProfiles {
-      id
-      isDistanceLearning
-      isLeader
-      position
-      courseNumber
-      group {
-        id
-        name
-      }
-    }
-    roles {
-      id
-      title
-      description
-    }
+    createdAt
   }
 }
