@@ -16,7 +16,7 @@ const AuthLayout = () => (
       </div>
     </aside>
 
-    <main className="flex items-center justify-center px-4 py-8 md:px-6 md:py-12">
+    <main className="flex items-start justify-center px-4 pb-8 pt-16 md:px-6 lg:items-center lg:py-12">
       <div className="w-full max-w-sm">
         <Outlet />
       </div>

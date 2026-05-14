@@ -1,6 +1,6 @@
 import { generatePath as routerGeneratePath } from 'react-router';
 
-import { RoutePath } from '@/core/router/constants';
+import { RoutePath } from './constants';
 
 type Args<Path extends string> = Parameters<typeof routerGeneratePath<Path>>;
 

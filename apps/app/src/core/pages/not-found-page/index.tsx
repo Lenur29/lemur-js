@@ -1,6 +1,6 @@
 import { Link } from 'react-router';
 
-import { RoutePath } from '@/core/router/constants';
+import { RoutePath } from '../../router/constants';
 
 const NotFoundPage = () => {
   return (

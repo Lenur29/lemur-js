@@ -1,38 +1,37 @@
-import { lazy } from 'react';
-import { createBrowserRouter, Navigate } from 'react-router';
+import { createBrowserRouter } from "react-router";
 
-import AppLayout from '@/shared/layouts/app-layout';
-import AuthLayout from '@/shared/layouts/auth-layout';
-import { authRoutes } from '@/features/auth/routes';
-import { dashboardRoutes } from '@/features/dashboard/routes';
-import { notesRoutes } from '@/features/notes/routes';
-import { questionsRoutes } from '@/features/questions/routes';
-import { reviewRoutes } from '@/features/review/routes';
-import { topicsRoutes } from '@/features/topics/routes';
-import { usersRoutes } from '@/features/users/routes';
-import { RoutePath } from '@/core/router/constants';
+import { authRoutes } from "@/features/auth/routes";
+import { dashboardRoutes } from "@/features/dashboard/routes";
+import { topicsRoutes } from "@/features/topics/routes";
 
-const NotFoundPage = lazy(() => import('../pages/not-found-page'));
+import AppLayout from "@/shared/layouts/app-layout";
+import AuthLayout from "@/shared/layouts/auth-layout";
+import FullScreenLoader from "../components/full-screen-loader";
+import ErrorBoundary from "../pages/error-boundary";
+import NotFoundPage from "../pages/not-found-page";
+import { RoutePath } from "./constants";
+import { loginLoader, protectedLoader, rootLoader } from "./loaders";
 
 export const router = createBrowserRouter([
-  { path: RoutePath.Root, element: <Navigate to={RoutePath.Dashboard} replace /> },
+	{
+		HydrateFallback: FullScreenLoader,
+		ErrorBoundary,
+		children: [
+			{ path: RoutePath.Root, loader: rootLoader },
 
-  {
-    element: <AuthLayout />,
-    children: authRoutes,
-  },
+			{
+				loader: loginLoader,
+				element: <AuthLayout />,
+				children: authRoutes,
+			},
 
-  {
-    element: <AppLayout />,
-    children: [
-      ...dashboardRoutes,
-      ...usersRoutes,
-      ...topicsRoutes,
-      ...questionsRoutes,
-      ...reviewRoutes,
-      ...notesRoutes,
-    ],
-  },
+			{
+				loader: protectedLoader,
+				element: <AppLayout />,
+				children: [...dashboardRoutes, ...topicsRoutes],
+			},
 
-  { path: RoutePath.NotFound, element: <NotFoundPage /> },
+			{ path: RoutePath.NotFound, element: <NotFoundPage /> },
+		],
+	},
 ]);

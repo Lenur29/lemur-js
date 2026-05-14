@@ -1,10 +1,8 @@
-import { lazy } from 'react';
 import type { RouteObject } from 'react-router';
 
 import { RoutePath } from '@/core/router/constants';
-
-const DashboardPage = lazy(() => import('./pages/dashboard-page'));
+import { lazyRoute } from '@/core/router/lazy-route';
 
 export const dashboardRoutes: RouteObject[] = [
-  { path: RoutePath.Dashboard, element: <DashboardPage /> },
+  { path: RoutePath.Dashboard, lazy: lazyRoute(() => import('./pages/dashboard-page')) },
 ];
